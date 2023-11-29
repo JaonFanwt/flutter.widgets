@@ -202,7 +202,8 @@ mixin RenderVisibilityDetectorBase on RenderObject {
     // Add one extra leaf layer so that we can apply the transform of `layer`
     // to the matrix.
     ContainerLayer? ancestor = layer;
-    final List<ContainerLayer> ancestors = <ContainerLayer>[ContainerLayer()];
+    ContainerLayer rootLayer = ContainerLayer();
+    final List<ContainerLayer> ancestors = <ContainerLayer>[rootLayer];
     while (ancestor != null && ancestor.parent != null) {
       ancestors.add(ancestor);
       ancestor = ancestor.parent;
@@ -229,6 +230,7 @@ mixin RenderVisibilityDetectorBase on RenderObject {
     if (_lastPaintTransform != null) {
       transform.multiply(_lastPaintTransform!);
     }
+    rootLayer.dispose();
     return VisibilityInfo.fromRects(
       key: key,
       widgetBounds: MatrixUtils.transformRect(transform, bounds),
